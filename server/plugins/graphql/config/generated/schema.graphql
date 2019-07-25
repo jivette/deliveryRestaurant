@@ -22,6 +22,14 @@ type createRolePayload {
   role: UsersPermissionsRole
 }
 
+input createSliderInput {
+  data: SliderInput
+}
+
+type createSliderPayload {
+  slider: Slider
+}
+
 input createUserInput {
   data: UserInput
 }
@@ -57,6 +65,14 @@ input deleteRoleInput {
 
 type deleteRolePayload {
   role: UsersPermissionsRole
+}
+
+input deleteSliderInput {
+  where: InputID
+}
+
+type deleteSliderPayload {
+  slider: Slider
 }
 
 input deleteUserInput {
@@ -122,6 +138,12 @@ input editRoleInput {
   users: [ID]
 }
 
+input editSliderInput {
+  name: String
+  description: String
+  image: ID
+}
+
 input editUserInput {
   username: String
   email: String
@@ -158,7 +180,7 @@ scalar JSON
 """The `Long` scalar type represents 52-bit integers"""
 scalar Long
 
-union Morph = UsersPermissionsMe | UsersPermissionsMeRole | Dish | createDishPayload | updateDishPayload | deleteDishPayload | Restaurant | createRestaurantPayload | updateRestaurantPayload | deleteRestaurantPayload | UploadFile | UsersPermissionsPermission | UsersPermissionsRole | createRolePayload | updateRolePayload | deleteRolePayload | UsersPermissionsUser | createUserPayload | updateUserPayload | deleteUserPayload
+union Morph = UsersPermissionsMe | UsersPermissionsMeRole | Dish | createDishPayload | updateDishPayload | deleteDishPayload | Restaurant | createRestaurantPayload | updateRestaurantPayload | deleteRestaurantPayload | Slider | createSliderPayload | updateSliderPayload | deleteSliderPayload | UploadFile | UsersPermissionsPermission | UsersPermissionsRole | createRolePayload | updateRolePayload | deleteRolePayload | UsersPermissionsUser | createUserPayload | updateUserPayload | deleteUserPayload
 
 type Mutation {
   createDish(input: createDishInput): createDishPayload
@@ -167,6 +189,9 @@ type Mutation {
   createRestaurant(input: createRestaurantInput): createRestaurantPayload
   updateRestaurant(input: updateRestaurantInput): updateRestaurantPayload
   deleteRestaurant(input: deleteRestaurantInput): deleteRestaurantPayload
+  createSlider(input: createSliderInput): createSliderPayload
+  updateSlider(input: updateSliderInput): updateSliderPayload
+  deleteSlider(input: deleteSliderInput): deleteSliderPayload
 
   """Create a new role"""
   createRole(input: createRoleInput): createRolePayload
@@ -193,6 +218,8 @@ type Query {
   dishes(sort: String, limit: Int, start: Int, where: JSON): [Dish]
   restaurant(id: ID!): Restaurant
   restaurants(sort: String, limit: Int, start: Int, where: JSON): [Restaurant]
+  slider(id: ID!): Slider
+  sliders(sort: String, limit: Int, start: Int, where: JSON): [Slider]
   files(sort: String, limit: Int, start: Int, where: JSON): [UploadFile]
   role(id: ID!): UsersPermissionsRole
 
@@ -230,6 +257,21 @@ input RoleInput {
   users: [ID]
 }
 
+type Slider {
+  id: ID!
+  created_at: DateTime!
+  updated_at: DateTime!
+  name: String
+  description: String
+  image: UploadFile
+}
+
+input SliderInput {
+  name: String
+  description: String
+  image: ID
+}
+
 input updateDishInput {
   where: InputID
   data: editDishInput
@@ -255,6 +297,15 @@ input updateRoleInput {
 
 type updateRolePayload {
   role: UsersPermissionsRole
+}
+
+input updateSliderInput {
+  where: InputID
+  data: editSliderInput
+}
+
+type updateSliderPayload {
+  slider: Slider
 }
 
 input updateUserInput {
