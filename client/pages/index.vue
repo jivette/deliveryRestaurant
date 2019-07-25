@@ -28,49 +28,49 @@
 </template>
 
 <script>
-import Strapi from 'strapi-sdk-javascript/build/main'
-const apiUrl = process.env.API_URL || 'http://localhost:1337'
-const strapi = new Strapi(apiUrl)
-export default {
-  data() {
-    return {
-      query: ''
-    }
-  },
-  computed: {
-    filteredList() {
-      return this.restaurants.filter(restaurant => {
-        return restaurant.name.toLowerCase().includes(this.query.toLowerCase())
-      })
+  import Strapi from 'strapi-sdk-javascript/build/main'
+  const apiUrl = process.env.API_URL || 'http://localhost:1337'
+  const strapi = new Strapi(apiUrl)
+  export default {
+    data() {
+      return {
+        query: ''
+      }
     },
-    restaurants() {
-      return this.$store.getters['restaurants/list']
-    }
-  },
-  async fetch({ store }) {
-    store.commit('restaurants/emptyList')
-    const response = await strapi.request('post', '/graphql', {
-      data: {
-        query: `query {
-            restaurants {
-              id
-              name
-              description
-              image {
-                url
+    computed: {
+      filteredList() {
+        return this.restaurants.filter(restaurant => {
+          return restaurant.name.toLowerCase().includes(this.query.toLowerCase())
+        })
+      },
+      restaurants() {
+        return this.$store.getters['restaurants/list']
+      }
+    },
+    async fetch({ store }) {
+      store.commit('restaurants/emptyList')
+      const response = await strapi.request('post', '/graphql', {
+        data: {
+          query: `query {
+              restaurants {
+                id
+                name
+                description
+                image {
+                  url
+                }
               }
             }
-          }
-          `
-      }
-    })
-    response.data.restaurants.forEach(restaurant => {
-      restaurant.image.url = `${apiUrl}${restaurant.image.url}`
-      store.commit('restaurants/add', {
-        id: restaurant.id,
-        ...restaurant
+            `
+        }
       })
-    })
+      response.data.restaurants.forEach(restaurant => {
+        restaurant.image.url = `${apiUrl}${restaurant.image.url}`
+        store.commit('restaurants/add', {
+          id: restaurant.id,
+          ...restaurant
+        })
+      })
+    }
   }
-}
 </script>
